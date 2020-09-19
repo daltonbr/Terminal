@@ -1,0 +1,21 @@
+{
+  "name": "com.daltonlima.terminal",
+  "displayName": "Terminal",
+  "version": "0.1.0",
+  "unity": "2029.4",
+  "keywords": [
+    "terminal", "runtime", "hack", "debug"
+  ],
+  "author": {"name": "Dalton Lima",
+             "url": "https://www.daltonlima.com"
+  },
+  "description": "Terminal to hack at runtime.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daltonbr/Terminal.git"
+  },
+  "dependencies": {"com.unity.inputsystem" : "1.0.0"
+  },
+  "unityRelease": "1f1",
+  "type": "tool"
+}
