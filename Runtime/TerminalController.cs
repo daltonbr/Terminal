@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,7 +7,7 @@ using UnityEngine.InputSystem;
 //TODO: disambiguation
 //TODO: keep a list of previous commands, manage it with up and down arrow
 
-namespace Terminal
+namespace DaltonLima.Terminal
 {
     public class TerminalController : MonoBehaviour
     {
@@ -19,33 +20,36 @@ namespace Terminal
         public static TerminalCommand KILL_ALL;
         public static TerminalCommand<int> SET_GOLD;
         public static TerminalCommand HELP;
+        public static TerminalCommand<bool> SET_DIRTY;
     
         [SerializeField] private Vector2Int _topLeftOffset = new Vector2Int(0,  0);
         // [SerializeField] private Vector2Int _bottomRightOffset = new Vector2Int(0,  0);
     
         [SerializeField] private InputAction toggleDebugAction;
         [SerializeField] private InputAction returnAction;
-    
         [HideInInspector][SerializeField] private InputActionMap debugActionMap;
     
         private void Awake()
         {
             SetupInput();
-        
+            commandList = new List<object>();
+            commandList.AddRange(MockupListTerminalCommands());
+        }
+
+        private IEnumerable<object> MockupListTerminalCommands()
+        {
             KILL_ALL = new TerminalCommand("kill", "Remove all heroes", "kill", () => Debug.Log("Kill Action"));
             SET_GOLD = new TerminalCommand<int>("set_gold", "set gold amount", "set_gold <gold_amount>", (x) => Debug.Log($"Set gold to {x}"));
             HELP = new TerminalCommand("help", "Show all possible commands", "help", () => _showHelp = true);
+            SET_DIRTY = new TerminalCommand<bool>("set_dirty", "set the current open project dirty", "set_dirty <bool>", (x) => Debug.Log($"Set dirty {x}"));
             commandList = new List<object>
             {
                 KILL_ALL,
                 SET_GOLD,
-                HELP
+                HELP,
+                SET_DIRTY
             };
-        }
-
-        private void MockupListTerminalCommands()
-        {
-            
+            return commandList;
         }
 
         private void OnGUI()
@@ -112,6 +116,16 @@ namespace Terminal
                             else
                             {
                                 Debug.Log("[DebugController] Syntax error! Expected integer value");
+                            }
+                            break;
+                        case TerminalCommand<bool>  terminalCommand:
+                            if (bool.TryParse(properties[i], out var boolParsed))
+                            {
+                                terminalCommand?.Invoke(boolParsed);
+                            }
+                            else
+                            {
+                                Debug.Log("[DebugController] Syntax error! Expected bool value");
                             }
                             break;
                     }

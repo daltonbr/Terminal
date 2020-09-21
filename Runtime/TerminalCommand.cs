@@ -1,44 +1,49 @@
 using System;
-using Terminal;
 
-public class TerminalCommand<T1> : TerminalCommandBase
+namespace DaltonLima.Terminal
 {
-    private Action<T1> _action;
-    
-    public TerminalCommand(Command command, Action<T1> action) : base(command)
+    public class TerminalCommand<T1> : TerminalCommandBase
     {
-        // _command = command;
-        _action = action;
-    }
-    
-    public TerminalCommand(string id, string description , string format, Action<T1> action) : base(id, description, format)
-    {
-        _action = action;
+        private Action<T1> _action;
+
+        public TerminalCommand(Command command, Action<T1> action) : base(command)
+        {
+            // _command = command;
+            _action = action;
+        }
+
+        public TerminalCommand(string id, string description, string format, Action<T1> action) 
+            : base(id, description, format)
+        {
+            _action = action;
+        }
+
+        public void Invoke(T1 value)
+        {
+            _action.Invoke(value);
+        }
     }
 
-    public void Invoke(T1 value)
+    public class TerminalCommand : TerminalCommandBase
     {
-        _action.Invoke(value);
-    }
-}
+        private Action _action;
 
-public class TerminalCommand : TerminalCommandBase
-{
-    private Action _action;
+        public TerminalCommand(Command command, Action action)
+            : base(command)
+        {
+            //_command = command;
+            _action = action;
+        }
 
-    public TerminalCommand(Command command, Action action) : base(command)
-    {
-        //_command = command;
-        _action = action;
-    }
-    
-    public TerminalCommand(string id, string description , string format, Action action) : base(id, description, format)
-    {
-        _action = action;
-    }
+        public TerminalCommand(string id, string description, string format, Action action) : base(id, description,
+            format)
+        {
+            _action = action;
+        }
 
-    public void Invoke()
-    {
-        _action.Invoke();
+        public void Invoke()
+        {
+            _action.Invoke();
+        }
     }
 }
